@@ -1,21 +1,22 @@
 import tensorflow as tf 
 import numpy as np 
 import unittest
-
+import os
 import mysqure
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 
 class Test(unittest.TestCase):  
 
     def test_b_run(self):
-        input_tensor = tf.constant(np.array([1,5,36,3.25]),dtype = np.float32)
+
+        input_tensor = tf.constant(np.random.rand(250,256)*10,dtype = np.float32)
         output_tensor1 = mysqure.mysqure(input_tensor)
         output_tensor2 = input_tensor * input_tensor
 
         grad1 = tf.gradients(output_tensor1,input_tensor)
         grad2 = tf.gradients(output_tensor2,input_tensor)
 
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             res1,res2 = sess.run([grad1,grad2])
 
         print("="*40,"res1","="*40)	
